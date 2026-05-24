@@ -87,7 +87,6 @@ export default buildConfig({
       },
       // ←←← ADD THIS LINE
       publicUrl: process.env.R2_PUBLIC_URL,
-        // ad randnoasdnf
     }),
   ],
   endpoints: [
