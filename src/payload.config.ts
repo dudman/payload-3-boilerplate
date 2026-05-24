@@ -71,24 +71,27 @@ export default buildConfig({
   globals: [Header, Footer],
   plugins: [
     ...plugins,
-    s3Storage({
-      collections: {
-        media: true,
-      },
-      bucket: process.env.R2_BUCKET!,
-      config: {
-        endpoint: `https://${process.env.R2_ENDPOINT}`,
-        credentials: {
-          accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-          secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+    // ←←← REPLACE YOUR CURRENT s3Storage(...) WITH THIS
+    ...(process.env.R2_BUCKET && process.env.R2_ACCESS_KEY_ID
+    ? [
+      s3Storage({
+        collections: {
+          media: true,
         },
-        region: 'auto',
-        forcePathStyle: true,
-      },
-      // ←←← ADD THIS LINE
-      publicUrl: process.env.R2_PUBLIC_URL,
-    }),
-  ],
+        bucket: process.env.R2_BUCKET,
+        config: {
+          endpoint: `https://${process.env.R2_ENDPOINT}`,
+          credentials: {
+            accessKeyId: process.env.R2_ACCESS_KEY_ID,
+            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+          },
+          region: 'auto',
+          forcePathStyle: true,
+        },
+        publicUrl: process.env.R2_PUBLIC_URL,
+      }),
+    ]
+    : []),
   endpoints: [
     {
       path: '/health',
