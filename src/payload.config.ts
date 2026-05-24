@@ -72,20 +72,22 @@ export default buildConfig({
   plugins: [
     ...plugins,
     s3Storage({
-  collections: {
-    media: true,        // ← this applies R2 to your Media collection
-  },
-  bucket: process.env.R2_BUCKET!,
-  config: {
-    endpoint: `https://${process.env.R2_ENDPOINT}`,
-    credentials: {
-      accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-      secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
-    },
-    region: 'auto',
-    forcePathStyle: true,
-  },
-}),
+      collections: {
+        media: true,
+      },
+      bucket: process.env.R2_BUCKET!,
+      config: {
+        endpoint: `https://${process.env.R2_ENDPOINT}`,
+        credentials: {
+          accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+          secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+        },
+        region: 'auto',
+        forcePathStyle: true,
+      },
+      // ←←← ADD THIS LINE
+      publicUrl: process.env.R2_PUBLIC_URL,
+    }),
   ],
   endpoints: [
     {
