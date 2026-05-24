@@ -72,30 +72,9 @@ export default buildConfig({
   plugins: [
     ...plugins,
 
-    // Safe Cloudflare R2 storage – only loads when all variables are present
-    ...(process.env.R2_BUCKET &&
-    process.env.R2_ACCESS_KEY_ID &&
-    process.env.R2_SECRET_ACCESS_KEY &&
-    process.env.R2_ENDPOINT
-    ? [
-      s3Storage({
-        collections: {
-          media: true,
-        },
-        bucket: process.env.R2_BUCKET,
-        config: {
-          endpoint: `https://${process.env.R2_ENDPOINT}`,
-          credentials: {
-            accessKeyId: process.env.R2_ACCESS_KEY_ID,
-            secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
-          },
-          region: 'auto',
-          forcePathStyle: true,
-        },
-        publicUrl: process.env.R2_PUBLIC_URL,
-      }),
-    ]
-    : []),
+    // ←←← TEMPORARILY DISABLED R2 (so build succeeds)
+    // We'll turn it back on in the next step once we have a green build
+    // s3Storage({ ... }),
   ],
   endpoints: [
     {
