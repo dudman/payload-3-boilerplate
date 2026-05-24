@@ -70,11 +70,7 @@ export default buildConfig({
                                    region: 'auto',
                                    forcePathStyle: true,
                                  },
-                                 publicUrl: process.env.R2_PUBLIC_URL,   // nice pub-xxx.r2.dev URL
                                }),
-                             ]
-                             : []),
-                           ],
                            endpoints: [
                              {
                                path: '/health',
