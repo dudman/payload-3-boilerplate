@@ -15,7 +15,7 @@ import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
-import { s3Storage } from '@payloadcms/storage-s3'   // ← added
+import { s3Storage } from '@payloadcms/storage-s3'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -50,7 +50,7 @@ export default buildConfig({
                            plugins: [
                              ...plugins,
 
-                             // Safe Cloudflare R2 – only loads when variables exist (prevents build crashes)
+                             // Safe Cloudflare R2 storage (only loads when variables are set)
                              ...(process.env.R2_BUCKET &&
                              process.env.R2_ACCESS_KEY_ID &&
                              process.env.R2_SECRET_ACCESS_KEY &&
@@ -71,14 +71,17 @@ export default buildConfig({
                                    forcePathStyle: true,
                                  },
                                }),
+                             ]
+                             : []),
+                           ],
                            endpoints: [
                              {
                                path: '/health',
                                method: 'get',
                                handler: async (req) => {
-                                 return new Response('OK', { status: 200 });
-                               }
-                             }
+                                 return new Response('OK', { status: 200 })
+                               },
+                             },
                            ],
                            secret: process.env.PAYLOAD_SECRET,
                            sharp,
