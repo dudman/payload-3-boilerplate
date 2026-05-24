@@ -15,6 +15,7 @@ import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
+import { s3Storage } from '@payloadcms/storage-s3'   // ← added
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -48,7 +49,31 @@ export default buildConfig({
                            globals: [Header, Footer],
                            plugins: [
                              ...plugins,
-                             // storage-adapter-placeholder
+
+                             // Safe Cloudflare R2 – only loads when variables exist (prevents build crashes)
+                             ...(process.env.R2_BUCKET &&
+                             process.env.R2_ACCESS_KEY_ID &&
+                             process.env.R2_SECRET_ACCESS_KEY &&
+                             process.env.R2_ENDPOINT
+                             ? [
+                               s3Storage({
+                                 collections: {
+                                   media: true,
+                                 },
+                                 bucket: process.env.R2_BUCKET,
+                                 config: {
+                                   endpoint: `https://${process.env.R2_ENDPOINT}`,
+                                   credentials: {
+                                     accessKeyId: process.env.R2_ACCESS_KEY_ID,
+                                     secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+                                   },
+                                   region: 'auto',
+                                   forcePathStyle: true,
+                                 },
+                                 publicUrl: process.env.R2_PUBLIC_URL,   // nice pub-xxx.r2.dev URL
+                               }),
+                             ]
+                             : []),
                            ],
                            endpoints: [
                              {
